@@ -38,6 +38,7 @@
     "typescript": "^6.0.3"
   },
   "dependencies": {
+    "highcharts": "^12.6.0",
     "pandas-js": "^0.2.4",
     "yahoo-finance": "^0.3.8",
     "yahoo-finance2": "^3.15.2"

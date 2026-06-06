@@ -2,6 +2,9 @@ import express from 'express';
 import itemRoutes from './routes/itemRoutes.ts';
 import { errorHandler } from './middlewares/errorHandler.ts';
 import {Timer} from './timer.ts'
+import YahooFinance from "yahoo-finance2";
+import { log } from 'console';
+
 
 const app = express();
 
@@ -29,6 +32,20 @@ app.get("/subtract", (req, res) => {
 
     timer.subtract(num, desc, timestamp)
     res.status(200).send("OK")
+})
+
+app.get("/stock", (req, res) => {
+    let yahooFinance = new YahooFinance({ suppressNotices: ['yahooSurvey'] });
+    async function stockies() {
+        let results =  await yahooFinance.search("Bitcoin USD");
+        let quote =  await yahooFinance.quote('BTC-USD');
+        
+        res.send(quote)
+    }
+
+    stockies()
+
+    
 })
 
 app.get("/subtract_events", (req, res) => {
