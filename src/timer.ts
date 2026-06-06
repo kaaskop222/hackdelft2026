@@ -5,6 +5,7 @@ export class Timer {
     events: [string, number, number, string][]
     interval: NodeJS.Timeout
     is_finished: boolean
+    leaderboard: Map<string, number>
 
     constructor(total_time = 1000000){
         this.time_remaining_ms = total_time
@@ -12,6 +13,7 @@ export class Timer {
         this.events = []
         this.interval = setInterval(() => this.natural_decay(), 50)
         this.is_finished = false
+        this.leaderboard = new Map()
     }
 
     natural_decay() {
@@ -30,6 +32,12 @@ export class Timer {
         this.events.push([short_description, number_milliseconds, timestamp, user])
         setTimeout(() => this.events.shift(), 2000)
         this.check_finished()
+
+        let previous = 0
+        if(this.leaderboard.has(user)){
+            previous = this.leaderboard.get(user)!
+        }
+        this.leaderboard.set(user, previous + number_milliseconds)
     }
 
     check_finished(){
@@ -53,5 +61,9 @@ export class Timer {
             }
         }
         return result
+    }
+
+    get_sorted_leaderboard(): [string, number][] {
+        return Array.from(this.leaderboard.entries()).sort((a,b) => b[1] - a[1])
     }
 }

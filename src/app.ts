@@ -39,6 +39,11 @@ app.get("/subtract_events", (req, res) => {
     res.status(200).send({"ts": timestamp, "events": events})
 })
 
+app.get('/leaderboard', (req, res) => {
+    let leaderboard = timer.get_sorted_leaderboard()
+    res.status(200).send(leaderboard)
+})
+
 app.use(express.static('public'))
 
 // Global error handler (should be after routes)

@@ -39,3 +39,15 @@
     opacity: 0;
   }
 }
+
+#leaderboard-text{
+    text-align: center;
+    color: black;
+    margin-top: 50px;
+    font-size: 40px;
+}
+
+#leaderboard-entries{
+    text-align: center;
+    font-size: 30px
+}

@@ -3,17 +3,21 @@ console.log("Hi!")
 // ----------------
 // ELEMENTS
 // ----------------
-let timer_text = document.querySelector("#timer")
-let subtract_input = document.querySelector<HTMLInputElement>("#subtract-input")
-let subtract_button = document.querySelector<HTMLButtonElement>("#subtract-button")
-let name_input = document.querySelector<HTMLInputElement>("#name-input")
-let event_layer = document.querySelector<HTMLDivElement>("#event-layer")
+let timer_text = document.querySelector("#timer")!
+let subtract_input = document.querySelector<HTMLInputElement>("#subtract-input")!
+let subtract_button = document.querySelector<HTMLButtonElement>("#subtract-button")!
+let name_input = document.querySelector<HTMLInputElement>("#name-input")!
+let event_layer = document.querySelector<HTMLDivElement>("#event-layer")!
+let leaderboard = document.querySelector<HTMLDivElement>("#leaderboard-entries")!
 
 // ---------------
 // VARIABLES
 // ----------------
 
 let last_fetched_events: number = 0
+let synced_timer_remaining: number = 0
+let synced_timer_received_at: number = Date.now()
+let timer_finished: boolean = false
 
 // -----------------
 // HELPERS
@@ -58,20 +62,64 @@ function create_event_display(subtraction: number, description: string, user: st
     setTimeout(() => event.remove(), 5000)
 }
 
+function render_timer_local() {
+    if (timer_finished) return
+
+    const elapsed = Date.now() - synced_timer_received_at
+    const remaining = Math.max(0, synced_timer_remaining - elapsed)
+    timer_text!.textContent = msToTime(remaining)
+
+    if (remaining === 0) {
+        timer_finished = true
+        timer_text!.textContent = "Hello, World!"
+        clearInterval(timer_render_interval)
+        clearTimeout(event_timeout)
+    }
+}
+
+function render_leaderboard(entries: [string, number][]) {
+    const fragment = document.createDocumentFragment();
+    let index = 1
+    for (const entry of entries) {
+        const row = document.createElement("div");
+        row.className = "leaderboard-row";
+        row.textContent = `${index}. ${entry[0]}: ${entry[1]}`;
+
+        if (index == 1){
+            row.style.color = "gold"
+        }
+        else if (index == 2) {
+            row.style.color = "silver"
+        }
+        else if (index == 3) {
+            row.style.color = "brown"
+        }
+
+        index++
+        fragment.appendChild(row);
+    }
+
+    leaderboard.replaceChildren(fragment);
+}
+
 // --------------------
 // SERVER FUNCTIONS
 // --------------------
 
-async function get_timer() {
+async function sync_timer() {
     let response = await fetch("/timer")
     if(!response.ok){
         throw new Error(`Response status: ${response.status}`)
     }
     let result = await response.json()
-    timer_text!.textContent = msToTime(result)
-    if (result == 0) {
+    synced_timer_remaining = Number(result)
+    synced_timer_received_at = Date.now()
+    timer_finished = false
+    render_timer_local()
+
+    if (synced_timer_remaining == 0) {
         timer_text!.textContent = "Hello, World!"
-        clearInterval(timer_interval)
+        clearInterval(timer_render_interval)
         clearTimeout(event_timeout)
     }
 }
@@ -87,10 +135,14 @@ async function subtract() {
         user: name
     }).toString())
 
-    if(!resp.ok) console.log(`Not ok response ${resp}`)
+    if(!resp.ok) {
+        console.log(`Not ok response ${resp}`)
+        return
+    }
 }
 
 async function get_events() {
+    sync_timer()
     let resp = await fetch("/subtract_events?" + new URLSearchParams({
         last_fetch: String(last_fetched_events)
     }))
@@ -103,15 +155,23 @@ async function get_events() {
     for (const event of events_list){
         create_event_display(Number(event[1]), String(event[0]), String(event[3]))
     }
-    event_timeout = setTimeout(() => get_events(), 100)
+    event_timeout = setTimeout(() => get_events(), 300)
+}
+
+async function get_leaderboard() {
+    let resp = await fetch("/leaderboard")
+    if (!resp.ok) throw new Error(`Response status: ${resp.status}`)
+    let lb = await resp.json()
+    render_leaderboard(lb)
+    leaderboard_timeout = setTimeout(() => get_leaderboard(), 1000)
 }
 
 // -------------------
 // MAIN
 // -------------------
 
-get_timer()
-let timer_interval = setInterval(() => get_timer(), 50)
+let timer_render_interval = setInterval(() => render_timer_local(), 37)
 let event_timeout = setTimeout(() => get_events(), 1)
+let leaderboard_timeout = setTimeout(() => get_leaderboard(), 1)
 
 subtract_button!.addEventListener("click", () => subtract())
