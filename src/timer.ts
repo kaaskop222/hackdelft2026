@@ -1,11 +1,11 @@
 export class Timer {
     time_remaining_ms: number
     last_timestamp: number
-    events: [string, number][]
+    events: [string, number, number][]
     interval: NodeJS.Timeout
     is_finished: boolean
 
-    constructor(total_time = 10000){
+    constructor(total_time = 1000000){
         this.time_remaining_ms = total_time
         this.last_timestamp = Date.now()
         this.events = []
@@ -21,10 +21,12 @@ export class Timer {
         this.check_finished()
     }
 
-    subtract(number_milliseconds: number, short_description: string) {
+    subtract(number_milliseconds: number, short_description: string, 
+        timestamp: number
+    ) {
         if (this.is_finished) return
         this.time_remaining_ms -= number_milliseconds
-        this.events.push([short_description, number_milliseconds])
+        this.events.push([short_description, number_milliseconds, timestamp])
         setTimeout(() => this.events.shift(), 5000)
         this.check_finished()
     }

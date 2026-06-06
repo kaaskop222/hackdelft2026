@@ -33,8 +33,15 @@ async function get_timer() {
     }
 }
 async function subtract() {
-    let num_subtract = Number(subtract_input.innerHTML);
-    console.log(num_subtract);
+    let num_subtract = subtract_input.valueAsNumber;
+    if (Number.isNaN(num_subtract))
+        return;
+    let resp = await fetch("/subtract?" + new URLSearchParams({
+        subtract_ms: String(num_subtract),
+        description: "Subtract Button"
+    }).toString());
+    if (!resp.ok)
+        console.log(`Not ok response ${resp}`);
 }
 export {};
 //# sourceMappingURL=index.js.map
