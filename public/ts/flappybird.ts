@@ -3,9 +3,16 @@ class flappybird {
     private context: CanvasRenderingContext2D;
     private paint: boolean;
 
-    private clickX: number[] = [];
-    private clickY: number[] = [];
-    private clickDrag: boolean[] = [];
+    // private clickX: number[] = [];
+    // private clickY: number[] = [];
+    // private clickDrag: boolean[] = [];
+
+    private birdY:number;
+    private gravity:number;
+    private speed:number;
+
+
+    private interval;
 
     constructor() {
         let canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -19,24 +26,29 @@ class flappybird {
         this.canvas = canvas;
         this.context = context;
         this.paint = false;
-        
 
+        this.birdY = 400;
+        this.gravity = -1;
+        this.speed = 5;
+        
+        this.update();
         this.redraw();
         this.createUserEvents();
+        this.interval = setInterval(() => this.update(), 50);
     }
 
     private createUserEvents() {
         let canvas = this.canvas;
 
         canvas.addEventListener("mousedown", this.pressEventHandler);
-        canvas.addEventListener("mousemove", this.dragEventHandler);
-        canvas.addEventListener("mouseup", this.releaseEventHandler);
-        canvas.addEventListener("mouseout", this.cancelEventHandler);
+        // canvas.addEventListener("mousemove", this.dragEventHandler);
+        // canvas.addEventListener("mouseup", this.releaseEventHandler);
+        // canvas.addEventListener("mouseout", this.cancelEventHandler);
 
         canvas.addEventListener("touchstart", this.pressEventHandler);
-        canvas.addEventListener("touchmove", this.dragEventHandler);
-        canvas.addEventListener("touchend", this.releaseEventHandler);
-        canvas.addEventListener("touchcancel", this.cancelEventHandler);
+        // // canvas.addEventListener("touchmove", this.dragEventHandler);
+        // canvas.addEventListener("touchend", this.releaseEventHandler);
+        // canvas.addEventListener("touchcancel", this.cancelEventHandler);
 
         let clearElement = document.getElementById('clear')
         if(clearElement == null) throw new Error("clearElement is null")
@@ -45,83 +57,108 @@ class flappybird {
     }
 
     private redraw() {
-        let clickX = this.clickX;
+        // let clickX = this.clickX;
         let context = this.context;
-        let clickDrag = this.clickDrag;
-        let clickY = this.clickY;
-        for (let i = 0; i < clickX.length; ++i) {
-            context.beginPath();
-            if (clickDrag[i] && i) {
-                context.moveTo(clickX[i - 1]!, clickY[i - 1]!);
-            } else {
-                context.moveTo(clickX[i]! - 1, clickY[i]!);
-            }
+        // let clickDrag = this.clickDrag;
+        // let clickY = this.clickY;
+        // for (let i = 0; i < clickX.length; ++i) {
+        //     context.beginPath();
+        //     if (clickDrag[i] && i) {
+        //         context.moveTo(clickX[i - 1]!, clickY[i - 1]!);
+        //     } else {
+        //         context.moveTo(clickX[i]! - 1, clickY[i]!);
+        //     }
 
-            context.lineTo(clickX[i]!, clickY[i]!);
-            context.stroke();
-        }
+        //     context.lineTo(clickX[i]!, clickY[i]!);
+        //     context.stroke();
+        // }
+        // context.closePath();
+
+        context.beginPath();
+        context.arc(100, this.birdY, 10, 0, 2 * Math.PI);
+        context.fillStyle = "orange";
+        context.fill();
+        context.stroke()
         context.closePath();
+
     }
 
+
     private addClick(x: number, y: number, dragging: boolean) {
-        this.clickX.push(x);
-        this.clickY.push(y);
-        this.clickDrag.push(dragging);
+        // this.clickX.push(x);
+        // this.clickY.push(y);
+        // this.clickDrag.push(dragging);
     }
 
     private clearCanvas() {
-        this.context
-            .clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.clickX = [];
-        this.clickY = [];
-        this.clickDrag = [];
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        // this.clickX = [];
+        // this.clickY = [];
+        // this.clickDrag = [];
     }
 
     private clearEventHandler = () => {
         this.clearCanvas();
     }
 
-    private releaseEventHandler = () => {
-        this.paint = false;
-        this.redraw();
-    }
+    // private releaseEventHandler = () => {
+    //     this.paint = false;
+    //     this.redraw();
+    // }
 
-    private cancelEventHandler = () => {
-        this.paint = false;
-    }
+    // private cancelEventHandler = () => {
+    //     this.paint = false;
+    // }
 
     private pressEventHandler = (e: MouseEvent | TouchEvent) => {
-        let mouseX = (e as TouchEvent).changedTouches ?
-            (e as TouchEvent).changedTouches[0]!.pageX :
-            (e as MouseEvent).pageX;
-        let mouseY = (e as TouchEvent).changedTouches ?
-            (e as TouchEvent).changedTouches[0]!.pageY :
-            (e as MouseEvent).pageY;
-        mouseX -= this.canvas.offsetLeft;
-        mouseY -= this.canvas.offsetTop;
+        // let mouseX = (e as TouchEvent).changedTouches ?
+        //     (e as TouchEvent).changedTouches[0]!.pageX :
+        //     (e as MouseEvent).pageX;
+        // let mouseY = (e as TouchEvent).changedTouches ?
+        //     (e as TouchEvent).changedTouches[0]!.pageY :
+        //     (e as MouseEvent).pageY;
+        // mouseX -= this.canvas.offsetLeft;
+        // mouseY -= this.canvas.offsetTop;
 
-        this.paint = true;
-        this.addClick(mouseX, mouseY, false);
+        this.speed = 10;
+        
+        // this.addClick(mouseX, mouseY, false);
+        this.redraw();
+    }
+    
+    public Win(){
+        
+        clearInterval(this.interval)
+        
+    }
+
+    private update(){
+        console.log(this.speed);
+        if(this.speed > - 50) this.speed += this.gravity;
+        this.birdY -= this.speed;
+
+        if(this.birdY < 0) this.Win()
+        this.clearCanvas()
         this.redraw();
     }
 
-    private dragEventHandler = (e: MouseEvent | TouchEvent) => {
-        let mouseX = (e as TouchEvent).changedTouches ?
-            (e as TouchEvent).changedTouches[0]!.pageX :
-            (e as MouseEvent).pageX;
-        let mouseY = (e as TouchEvent).changedTouches ?
-            (e as TouchEvent).changedTouches[0]!.pageY :
-            (e as MouseEvent).pageY;
-        mouseX -= this.canvas.offsetLeft;
-        mouseY -= this.canvas.offsetTop;
+    // private dragEventHandler = (e: MouseEvent | TouchEvent) => {
+    //     let mouseX = (e as TouchEvent).changedTouches ?
+    //         (e as TouchEvent).changedTouches[0]!.pageX :
+    //         (e as MouseEvent).pageX;
+    //     let mouseY = (e as TouchEvent).changedTouches ?
+    //         (e as TouchEvent).changedTouches[0]!.pageY :
+    //         (e as MouseEvent).pageY;
+    //     mouseX -= this.canvas.offsetLeft;
+    //     mouseY -= this.canvas.offsetTop;
 
-        if (this.paint) {
-            this.addClick(mouseX, mouseY, true);
-            this.redraw();
-        }
+    //     if (this.paint) {
+    //         this.addClick(mouseX, mouseY, true);
+    //         this.redraw();
+    //     }
 
-        e.preventDefault();
-    }
+    //     e.preventDefault();
+    // }
 }
 
 new flappybird();
