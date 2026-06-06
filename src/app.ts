@@ -20,6 +20,8 @@ app.get("/timer", (req, res) => {
     res.send(timer.time_remaining_ms)
 })
 
+app.use(express.static('public'))
+
 // Global error handler (should be after routes)
 app.use(errorHandler);
 
