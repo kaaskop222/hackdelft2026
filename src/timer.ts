@@ -1,7 +1,8 @@
 export class Timer {
     time_remaining_ms: number
     last_timestamp: number
-    events: [string, number, number][]
+    //      [DESC,   SUBTRACT, TS,   USER]
+    events: [string, number, number, string][]
     interval: NodeJS.Timeout
     is_finished: boolean
 
@@ -9,7 +10,7 @@ export class Timer {
         this.time_remaining_ms = total_time
         this.last_timestamp = Date.now()
         this.events = []
-        this.interval = setInterval(() => this.natural_decay(), 10)
+        this.interval = setInterval(() => this.natural_decay(), 50)
         this.is_finished = false
     }
 
@@ -22,12 +23,12 @@ export class Timer {
     }
 
     subtract(number_milliseconds: number, short_description: string, 
-        timestamp: number
+        timestamp: number, user: string
     ) {
         if (this.is_finished) return
         this.time_remaining_ms -= number_milliseconds
-        this.events.push([short_description, number_milliseconds, timestamp])
-        setTimeout(() => this.events.shift(), 5000)
+        this.events.push([short_description, number_milliseconds, timestamp, user])
+        setTimeout(() => this.events.shift(), 2000)
         this.check_finished()
     }
 
@@ -41,5 +42,16 @@ export class Timer {
         clearInterval(this.interval)
         this.time_remaining_ms = 0
         // TODO: Do something when finished
+    }
+
+    get_events_since_timestamp(timestamp: number) {
+        let result: [string, number, number, string][] = []
+        for (const event of this.events){
+            let ts = event[2]
+            if (timestamp < ts){
+                result.push(event)
+            }
+        }
+        return result
     }
 }

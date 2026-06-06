@@ -25,15 +25,18 @@ app.get("/subtract", (req, res) => {
     if (Number.isNaN(num)) res.status(400).send("Bad request")
     let timestamp =  Date.now()
     let desc = String(req.query.description)
-    let user = req.query.user
+    let user = typeof req.query.user === "string" ? req.query.user : "";
 
-    timer.subtract(num, desc, timestamp)
+    timer.subtract(num, desc, timestamp, user)
     res.status(200).send("OK")
 })
 
 app.get("/subtract_events", (req, res) => {
-    let last_fetch_timestamp = req.query.last_fetch
+    let last_fetch_timestamp = Number(req.query.last_fetch)
     if (Number.isNaN(last_fetch_timestamp)) res.status(400).send("Bad request")
+    let timestamp = Date.now()
+    let events = timer.get_events_since_timestamp(last_fetch_timestamp)
+    res.status(200).send({"ts": timestamp, "events": events})
 })
 
 app.use(express.static('public'))

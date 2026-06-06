@@ -3,24 +3,9 @@ class flappybird {
         this.clearEventHandler = () => {
             this.clearCanvas();
         };
-        // private releaseEventHandler = () => {
-        //     this.paint = false;
-        //     this.redraw();
-        // }
-        // private cancelEventHandler = () => {
-        //     this.paint = false;
-        // }
+        //update speed when pressed
         this.pressEventHandler = (e) => {
-            // let mouseX = (e as TouchEvent).changedTouches ?
-            //     (e as TouchEvent).changedTouches[0]!.pageX :
-            //     (e as MouseEvent).pageX;
-            // let mouseY = (e as TouchEvent).changedTouches ?
-            //     (e as TouchEvent).changedTouches[0]!.pageY :
-            //     (e as MouseEvent).pageY;
-            // mouseX -= this.canvas.offsetLeft;
-            // mouseY -= this.canvas.offsetTop;
             this.speed = 10;
-            // this.addClick(mouseX, mouseY, false);
             this.redraw();
         };
         let canvas = document.getElementById('canvas');
@@ -33,7 +18,6 @@ class flappybird {
         context.lineWidth = 1;
         this.canvas = canvas;
         this.context = context;
-        this.paint = false;
         this.birdY = 400;
         this.gravity = -1;
         this.speed = 5;
@@ -42,37 +26,19 @@ class flappybird {
         this.createUserEvents();
         this.interval = setInterval(() => this.update(), 50);
     }
+    // check user input mousedown or touch
     createUserEvents() {
         let canvas = this.canvas;
         canvas.addEventListener("mousedown", this.pressEventHandler);
-        // canvas.addEventListener("mousemove", this.dragEventHandler);
-        // canvas.addEventListener("mouseup", this.releaseEventHandler);
-        // canvas.addEventListener("mouseout", this.cancelEventHandler);
         canvas.addEventListener("touchstart", this.pressEventHandler);
-        // // canvas.addEventListener("touchmove", this.dragEventHandler);
-        // canvas.addEventListener("touchend", this.releaseEventHandler);
-        // canvas.addEventListener("touchcancel", this.cancelEventHandler);
         let clearElement = document.getElementById('clear');
         if (clearElement == null)
             throw new Error("clearElement is null");
         clearElement.addEventListener("click", this.clearEventHandler);
     }
+    //draw player
     redraw() {
-        // let clickX = this.clickX;
         let context = this.context;
-        // let clickDrag = this.clickDrag;
-        // let clickY = this.clickY;
-        // for (let i = 0; i < clickX.length; ++i) {
-        //     context.beginPath();
-        //     if (clickDrag[i] && i) {
-        //         context.moveTo(clickX[i - 1]!, clickY[i - 1]!);
-        //     } else {
-        //         context.moveTo(clickX[i]! - 1, clickY[i]!);
-        //     }
-        //     context.lineTo(clickX[i]!, clickY[i]!);
-        //     context.stroke();
-        // }
-        // context.closePath();
         context.beginPath();
         context.arc(100, this.birdY, 10, 0, 2 * Math.PI);
         context.fillStyle = "orange";
@@ -80,20 +46,14 @@ class flappybird {
         context.stroke();
         context.closePath();
     }
-    addClick(x, y, dragging) {
-        // this.clickX.push(x);
-        // this.clickY.push(y);
-        // this.clickDrag.push(dragging);
-    }
     clearCanvas() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        // this.clickX = [];
-        // this.clickY = [];
-        // this.clickDrag = [];
     }
+    //stop when reaching the top
     Win() {
         clearInterval(this.interval);
     }
+    //game logic
     update() {
         console.log(this.speed);
         if (this.speed > -50)
