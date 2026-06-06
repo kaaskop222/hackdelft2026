@@ -23,7 +23,7 @@
     font-size: 16px;
     position: absolute;
     top: 0;
-  left: 50%;
+    left: 60%;
     transform: translateX(-50%);
     animation: descend-fade 5s ease-in forwards;
   white-space: nowrap;

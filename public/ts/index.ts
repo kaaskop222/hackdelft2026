@@ -48,6 +48,7 @@ function create_event_display(subtraction: number, description: string, user: st
     if (subtraction < 0) { 
         multiplier = "+"
         type = "negative"
+        subtraction *= -1
     }
     event.textContent = `${multiplier}${subtraction}:${user}:${description}`
     event.classList.add("event-message")
@@ -95,11 +96,9 @@ async function get_events() {
     }))
     if (!resp.ok) throw new Error(`Response status: ${resp.status}`)
     let events = await resp.json()
-    console.log(events)
     let ts = events["ts"]
     let events_list = events["events"]
-    //console.log(ts)
-    //console.log(events_list)
+
     last_fetched_events = ts
     for (const event of events_list){
         create_event_display(Number(event[1]), String(event[0]), String(event[3]))
