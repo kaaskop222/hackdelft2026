@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "target": "es2017",
+        "module": "nodenext",
+        "moduleResolution": "NodeNext",
+        "lib": ["dom", "esnext"],
+        "outDir": "public/js",
+        "rootDir": "public/ts",
+        "sourceMap": true,
+        "strict": true,
+        "declaration": false,
+        "esModuleInterop": true
+    },
+    "include": ["public/ts/**/*"]
+}

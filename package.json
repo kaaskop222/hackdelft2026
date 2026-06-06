@@ -7,7 +7,9 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "dev": "nodemon --watch 'src/**/*.ts' --exec ts-node src/server.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:client": "tsc -p tsconfig.client.json",
+    "watch:client": "tsc -p tsconfig.client.json --watch"
   },
   "repository": {
     "type": "git",
@@ -25,6 +27,7 @@
     "@types/express": "^5.0.6",
     "@types/node": "^25.9.2",
     "dotenv": "^17.4.2",
+    "esbuild": "^0.28.0",
     "eslint": "^10.4.1",
     "express": "^5.2.1",
     "install": "^0.13.0",
