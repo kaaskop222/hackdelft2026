@@ -23,6 +23,7 @@ class Graph{
         
 
     }
+    // draw graph
 
     private redraw() {
         let context = this.context;
@@ -46,6 +47,7 @@ class Graph{
 
     }
 
+    //add new price to prices array
     public setprice(newPrice:number){
         if(this.prices.length >= 10) this.prices.shift()
         this.prices.push(newPrice)
@@ -57,7 +59,7 @@ class Graph{
 
 let graph = new Graph()
 
-
+//fetch new price from server every 10s
 async function get_events() {
     let resp = await fetch("/stock")
     if (!resp.ok) throw new Error(`Response status: ${resp.status}`)
