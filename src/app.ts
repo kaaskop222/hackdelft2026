@@ -9,6 +9,10 @@ app.use(express.json());
 // Routes
 app.use('/api/items', itemRoutes);
 
+app.get("/hi", (req, res) => {
+    res.send("Hello World!")
+})
+
 // Global error handler (should be after routes)
 app.use(errorHandler);
 
