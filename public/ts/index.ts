@@ -7,6 +7,7 @@ let timer_text = document.querySelector("#timer")
 let subtract_input = document.querySelector<HTMLInputElement>("#subtract-input")
 let subtract_button = document.querySelector<HTMLButtonElement>("#subtract-button")
 let name_input = document.querySelector<HTMLInputElement>("#name-input")
+let event_layer = document.querySelector<HTMLDivElement>("#event-layer")
 
 // ---------------
 // VARIABLES
@@ -41,7 +42,19 @@ function msToTime(duration: number): string {
 }
 
 function create_event_display(subtraction: number, description: string, user: string) {
+    let event = document.createElement("div")
+    let multiplier = "-"
+    let type = "positive"
+    if (subtraction < 0) { 
+        multiplier = "+"
+        type = "negative"
+    }
+    event.textContent = `${multiplier}${subtraction}:${user}:${description}`
+    event.classList.add("event-message")
+    event.classList.add(type)
 
+    event_layer!.appendChild(event)
+    setTimeout(() => event.remove(), 5000)
 }
 
 // --------------------
@@ -88,6 +101,9 @@ async function get_events() {
     //console.log(ts)
     //console.log(events_list)
     last_fetched_events = ts
+    for (const event of events_list){
+        create_event_display(Number(event[1]), String(event[0]), String(event[3]))
+    }
     event_timeout = setTimeout(() => get_events(), 100)
 }
 
