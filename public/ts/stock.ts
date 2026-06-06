@@ -30,8 +30,8 @@ class Graph{
         if(this.xpoints.length>1){
             for(let i = 0; i<this.xpoints.length; i++){
                 context.beginPath();
-                context.moveTo(this.xpoints[i]!*50, this.prices[i]!-60250)
-                context.lineTo(this.xpoints[i+1]!*50, this.prices[i+1]!-60250)
+                context.moveTo(this.xpoints[i]!*50, 500 - (this.prices[i]!-60250))
+                context.lineTo(this.xpoints[i+1]!*50, 500 - (this.prices[i+1]!-60250))
                 if(this.prices[i+1]! < this.prices[i]!){
                     context.strokeStyle = "red"
                 }else{
