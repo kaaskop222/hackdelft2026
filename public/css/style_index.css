@@ -1,5 +1,53 @@
-h2{
+#timer{
     text-align: center;
     color: black;
     margin-top: 50px;
+    font-size: 40px;
+}
+
+#event-layer {
+  position: relative;
+  width: 100%;
+  height: 0;
+}
+
+.negative{
+    color: red
+}
+
+.positive{
+    color: green
+}
+
+.event-message{
+    font-size: 16px;
+    position: absolute;
+    top: 0;
+    left: 60%;
+    transform: translateX(-50%);
+    animation: descend-fade 5s ease-in forwards;
+  white-space: nowrap;
+}
+
+@keyframes descend-fade {
+  from {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-50%) translateY(200px);
+    opacity: 0;
+  }
+}
+
+#leaderboard-text{
+    text-align: center;
+    color: black;
+    margin-top: 50px;
+    font-size: 40px;
+}
+
+#leaderboard-entries{
+    text-align: center;
+    font-size: 30px
 }
