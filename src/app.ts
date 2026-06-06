@@ -31,6 +31,11 @@ app.get("/subtract", (req, res) => {
     res.status(200).send("OK")
 })
 
+app.get("/subtract_events", (req, res) => {
+    let last_fetch_timestamp = req.query.last_fetch
+    if (Number.isNaN(last_fetch_timestamp)) res.status(400).send("Bad request")
+})
+
 app.use(express.static('public'))
 
 // Global error handler (should be after routes)

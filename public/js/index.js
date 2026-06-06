@@ -1,11 +1,17 @@
 console.log("Hi!");
+// ----------------
+// ELEMENTS
+// ----------------
 let timer_text = document.querySelector("#timer");
 let subtract_input = document.querySelector("#subtract-input");
 let subtract_button = document.querySelector("#subtract-button");
-console.log(subtract_button);
-get_timer();
-let interval = setInterval(() => get_timer(), 20);
-subtract_button.addEventListener("click", () => subtract());
+// ---------------
+// VARIABLES
+// ----------------
+let last_fetched_events = 0;
+// -----------------
+// HELPERS
+// ------------------
 function msToTime(duration) {
     let multiplier = 1;
     if (duration < 0)
@@ -20,6 +26,9 @@ function msToTime(duration) {
         multiplier_string = "-";
     return multiplier_string + hours_text + ":" + minutes_text + ":" + seconds_text + "." + milliseconds;
 }
+// --------------------
+// SERVER FUNCTIONS
+// --------------------
 async function get_timer() {
     let response = await fetch("/timer");
     if (!response.ok) {
@@ -29,7 +38,8 @@ async function get_timer() {
     timer_text.textContent = msToTime(result);
     if (result == 0) {
         timer_text.textContent = "Hello, World!";
-        clearInterval(interval);
+        clearInterval(timer_interval);
+        clearInterval(event_interval);
     }
 }
 async function subtract() {
@@ -43,5 +53,21 @@ async function subtract() {
     if (!resp.ok)
         console.log(`Not ok response ${resp}`);
 }
+async function get_events() {
+    let resp = await fetch("/subtract_events?" + new URLSearchParams({
+        last_fetch: String(last_fetched_events)
+    }));
+    if (!resp.ok)
+        throw new Error(`Response status: ${resp.status}`);
+    let events = await resp.json();
+    console.log(events);
+}
+// -------------------
+// MAIN
+// -------------------
+get_timer();
+let timer_interval = setInterval(() => get_timer(), 20);
+let event_interval = setInterval(() => get_events(), 100);
+subtract_button.addEventListener("click", () => subtract());
 export {};
 //# sourceMappingURL=index.js.map

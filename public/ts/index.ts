@@ -1,16 +1,21 @@
 console.log("Hi!")
 
+// ----------------
+// ELEMENTS
+// ----------------
 let timer_text = document.querySelector("#timer")
 let subtract_input = document.querySelector<HTMLInputElement>("#subtract-input")
-let subtract_button = document.querySelector("#subtract-button")
+let subtract_button = document.querySelector<HTMLButtonElement>("#subtract-button")
 
+// ---------------
+// VARIABLES
+// ----------------
 
-console.log(subtract_button)
+let last_fetched_events: number = 0
 
-get_timer()
-let interval = setInterval(() => get_timer(), 20)
-
-subtract_button!.addEventListener("click", () => subtract())
+// -----------------
+// HELPERS
+// ------------------
 
 function msToTime(duration: number): string {
     let multiplier = 1
@@ -31,6 +36,10 @@ function msToTime(duration: number): string {
     return multiplier_string + hours_text + ":" + minutes_text + ":" + seconds_text + "." + milliseconds;
 }
 
+// --------------------
+// SERVER FUNCTIONS
+// --------------------
+
 async function get_timer() {
     let response = await fetch("/timer")
     if(!response.ok){
@@ -40,7 +49,8 @@ async function get_timer() {
     timer_text!.textContent = msToTime(result)
     if (result == 0) {
         timer_text!.textContent = "Hello, World!"
-        clearInterval(interval)
+        clearInterval(timer_interval)
+        clearInterval(event_interval)
     }
 }
 
@@ -54,3 +64,22 @@ async function subtract() {
 
     if(!resp.ok) console.log(`Not ok response ${resp}`)
 }
+
+async function get_events() {
+    let resp = await fetch("/subtract_events?" + new URLSearchParams({
+        last_fetch: String(last_fetched_events)
+    }))
+    if (!resp.ok) throw new Error(`Response status: ${resp.status}`)
+    let events = await resp.json()
+    console.log(events)
+}
+
+// -------------------
+// MAIN
+// -------------------
+
+get_timer()
+let timer_interval = setInterval(() => get_timer(), 20)
+let event_interval = setInterval(() => get_events(), 100)
+
+subtract_button!.addEventListener("click", () => subtract())
