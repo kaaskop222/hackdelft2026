@@ -6,7 +6,7 @@ let minigame_button = document.querySelector<HTMLButtonElement>("#minigame-butto
 
 name_text.innerHTML = name
 
-function getCookie(cname: string) {
+export function getCookie(cname: string) {
   let name = cname + "=";
   let decodedCookie = decodeURIComponent(document.cookie);
   let ca = decodedCookie.split(';');
