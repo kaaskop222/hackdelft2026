@@ -26,13 +26,40 @@ export function getCookie(cname: string) {
   }
   return "";
 }
+async function subtract(subtractNum:number) {
+    let num_subtract = subtractNum
+    if (Number.isNaN(num_subtract)) return
+    
+    const url = "/subtract?" + new URLSearchParams({
+        subtract_ms: String(num_subtract),
+        description: "checked out Hack Delft 2026!",
+        user: name
+    }).toString()
+
+    let resp: Response
+    try {
+        resp = await fetch(url, { method: 'GET', keepalive: true })
+    } catch (e) {
+        // Some browsers/environments may reject keepalive; fallback to normal fetch
+        resp = await fetch(url)
+    }
+
+    if(!resp.ok) {
+        console.log(`Not ok response ${resp}`)
+        return
+    }
+}
 
 async function minigame() {
     let gameNr = Math.floor(Math.random() * minigames.length);
     document.location.href = minigames[gameNr]!;
 }
 async function hackdelft() {
-
+    try {
+            await subtract(1000)
+        } catch (e) {
+            console.error('subtract failed', e)
+        }
     document.location.href = "https://hackdelft.nl";
 }
 
