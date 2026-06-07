@@ -105,10 +105,13 @@ class aim {
     }
     
     //stop when reaching the top
-    public Win(){
+    private async Win(){
         
-        subtract(10000)
-        
+        try {
+            await subtract(10000)
+        } catch (e) {
+            console.error('subtract failed', e)
+        }
         document.location.href = '/main.html';
 
         

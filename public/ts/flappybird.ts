@@ -86,7 +86,7 @@ class flappybird {
     }
     
     //stop when reaching the top
-    public async Win(){
+    private async Win(){
         clearInterval(this.interval)
         try {
             await subtract(10000)
