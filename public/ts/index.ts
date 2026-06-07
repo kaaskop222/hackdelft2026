@@ -13,18 +13,31 @@ let event_layer = document.querySelector<HTMLDivElement>("#event-layer")!
 let leaderboard = document.querySelector<HTMLDivElement>("#leaderboard-entries")!
 let double_button = document.querySelector<HTMLButtonElement>("#double-button")!
 let doubling_indicator = document.querySelector<HTMLDivElement>("#doubling-indicator")!
+let golden_cookie = document.querySelector<HTMLDivElement>("#golden-cookie")!
 
-let horn = new Audio('./sounds/horn.mp3')
+
+
 
 // ---------------
 // VARIABLES
 // ----------------
 
+let horn = new Audio('./sounds/horn.mp3')
 let multiplier: number = 1
 let last_fetched_events: number = 0
 let synced_timer_remaining: number = 0
 let synced_timer_received_at: number = Date.now()
 let timer_finished: boolean = false
+
+let golden_cookie_image = new Image()
+golden_cookie_image.src = "./img/golden_cookie.png"
+golden_cookie_image.id = "golden-cookie-img"
+golden_cookie_image.style.position = "absolute"
+golden_cookie_image.style.pointerEvents = "auto"
+golden_cookie_image.addEventListener("click", () => {
+    double()
+    golden_cookie.innerHTML = ""
+})
 
 // -----------------
 // HELPERS
@@ -37,8 +50,10 @@ function msToTime(duration: number): string {
     var milliseconds = Math.floor((duration % 1000)),
         seconds = Math.floor((duration / 1000) % 60),
         minutes = Math.floor((duration / (1000 * 60)) % 60),
-        hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+        hours = Math.floor((duration / (1000 * 60 * 60)) % 24),
+        days = Math.floor((duration / (1000 * 60 * 60 * 24)))
 
+    let days_text: string = (days < 1) ? "" : String(days) + "d:"
     let hours_text = (hours < 10) ? "0" + hours : hours;
     let minutes_text = (minutes < 10) ? "0" + minutes : minutes;
     let seconds_text = (seconds < 10) ? "0" + seconds : seconds;
@@ -49,7 +64,7 @@ function msToTime(duration: number): string {
     if (milliseconds < 100) milliseconds *= 10
     if (milliseconds < 100) milliseconds *= 10
 
-    return multiplier_string + hours_text + ":" + minutes_text + ":" + seconds_text + "." + milliseconds;
+    return multiplier_string + days_text + hours_text + ":" + minutes_text + ":" + seconds_text + "." + milliseconds;
 }
 
 function create_event_display(subtraction: number, description: string, user: string) {
@@ -122,6 +137,21 @@ function render_confetti() {
     });
 }
 
+function spawn_golden_cookie() {
+    let X = Math.floor(Math.random() * 80) + 10
+    let Y = Math.floor(Math.random() * 80) + 10
+    let delay = Math.floor(Math.random() * 90000) + 30000
+    console.log(`X: ${X}, Y: ${Y}, Delay: ${delay}`)
+
+    golden_cookie_image.style.left = `${X}%`
+    golden_cookie_image.style.top = `${Y}%`
+    golden_cookie.appendChild(golden_cookie_image)
+    console.log(golden_cookie_image.style)
+
+    golden_cookie_timeout = setTimeout(() => spawn_golden_cookie(), delay)
+    setTimeout(() => golden_cookie.innerHTML = "", 15000)
+}
+
 
 // --------------------
 // SERVER FUNCTIONS
@@ -144,13 +174,14 @@ async function sync_timer() {
         clearInterval(timer_render_interval)
         clearTimeout(event_timeout)
         clearTimeout(leaderboard_timeout)
+        clearTimeout(golden_cookie_timeout)
         spawn_confetti()
         get_leaderboard()
     }
 }
 
-async function subtract() {
-    let num_subtract = subtract_input!.valueAsNumber
+async function subtract(amount?: number) {
+    let num_subtract = amount ?? subtract_input!.valueAsNumber
     if (Number.isNaN(num_subtract)) return
     let name = name_input!.value
 
@@ -204,6 +235,17 @@ async function double() {
     }
 }
 
+async function fetch_multiplier() {
+    let resp = await fetch("/multiplier")
+    if (!resp.ok) throw new Error(`Response status: ${resp.status}`)
+    let mult = await resp.json()
+    multiplier = Number(mult)
+    if (multiplier > 1) {
+        doubling_indicator.innerText = `${multiplier}X`
+        doubling_indicator.style.fontSize = (90 + 20 * Math.log2(multiplier)) + "px"
+    }
+}
+
 // -------------------
 // MAIN
 // -------------------
@@ -211,7 +253,9 @@ async function double() {
 let timer_render_interval = setInterval(() => render_timer_local(), 37)
 let event_timeout = setTimeout(() => get_events(), 1)
 let leaderboard_timeout = setTimeout(() => get_leaderboard(), 1)
+let golden_cookie_timeout = setTimeout(() => spawn_golden_cookie(), 90000)
 
 subtract_button!.addEventListener("click", () => subtract())
 
 double_button.onclick = () => double()
+fetch_multiplier()

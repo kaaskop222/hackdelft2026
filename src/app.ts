@@ -65,6 +65,11 @@ app.get('/double', (req, res) => {
     res.send("OK")
 })
 
+app.get('/multiplier', (req, res) => {
+    let multiplier = timer.multiplier
+    res.send(multiplier)
+})
+
 app.use(express.static('public'))
 
 // Global error handler (should be after routes)

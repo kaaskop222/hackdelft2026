@@ -48,7 +48,7 @@ class Graph{
                 context.stroke();
                 context.closePath();
 
-                console.log(this.xpoints[i+1]!*50, this.prices[i+1]!-60250)
+                //console.log(this.xpoints[i+1]!*50, this.prices[i+1]!-60250)
             }
         }
 
