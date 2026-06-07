@@ -1,3 +1,5 @@
+import {getCookie} from './main.ts'
+
 class flappybird {
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
@@ -111,13 +113,14 @@ class flappybird {
 
 new flappybird();
 
+let name = getCookie("username")
 
 async function subtract(subtractNum:number) {
     let num_subtract = subtractNum
     if (Number.isNaN(num_subtract)) return
-    let name = "minigame"
+    
 
-    let resp = await fetch("/subtract" + new URLSearchParams({
+    let resp = await fetch("/subtract?" + new URLSearchParams({
         subtract_ms: String(num_subtract),
         description: "won the flappy bird minigame :)",
         user: name

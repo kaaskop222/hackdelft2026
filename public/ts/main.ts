@@ -2,6 +2,8 @@ let name_text = document.querySelector<HTMLDivElement>("#name-text")!
 
 let name = getCookie("username")
 
+let minigame_button = document.querySelector<HTMLButtonElement>("#minigame-button")!
+
 name_text.innerHTML = name
 
 function getCookie(cname: string) {
@@ -19,3 +21,9 @@ function getCookie(cname: string) {
   }
   return "";
 }
+
+async function minigame() {
+    document.location.replace('/flappybird.html');
+}
+
+minigame_button!.addEventListener("click", () => minigame())
