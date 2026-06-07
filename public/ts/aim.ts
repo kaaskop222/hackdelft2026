@@ -46,6 +46,7 @@ class aim {
         canvas.addEventListener("mousedown", this.pressEventHandler);
         
         canvas.addEventListener("touchstart", this.pressEventHandler);
+        canvas.style.touchAction = "none";
         
         let clearElement = document.getElementById('clear')
         if(clearElement == null) throw new Error("clearElement is null")
@@ -81,14 +82,17 @@ class aim {
     //update speed when pressed
 
     private pressEventHandler = (e: MouseEvent | TouchEvent) => {
-    let mouseX = (e as TouchEvent).changedTouches ?
-                 (e as TouchEvent).changedTouches[0]!.pageX :
-                 (e as MouseEvent).pageX;
-    let mouseY = (e as TouchEvent).changedTouches ?
-                 (e as TouchEvent).changedTouches[0]!.pageY :
-                 (e as MouseEvent).pageY;
-    mouseX -= this.canvas.offsetLeft;
-    mouseY -= this.canvas.offsetTop;
+    e.preventDefault()
+
+    const rect = this.canvas.getBoundingClientRect()
+    const point = 'changedTouches' in e
+        ? e.changedTouches[0]!
+        : e
+
+    const scaleX = this.canvas.width / rect.width
+    const scaleY = this.canvas.height / rect.height
+    let mouseX = (point.clientX - rect.left) * scaleX
+    let mouseY = (point.clientY - rect.top) * scaleY
 
     
 
