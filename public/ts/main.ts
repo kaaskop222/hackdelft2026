@@ -3,6 +3,11 @@ let name_text = document.querySelector<HTMLDivElement>("#name-text")!
 let name = getCookie("username")
 
 let minigame_button = document.querySelector<HTMLButtonElement>("#minigame-button")!
+let hackdelft_button = document.querySelector<HTMLButtonElement>("#hackdelft-button")!
+
+let minigames:string[];
+
+minigames = ['/flappybird.html', '/aim.html']
 
 name_text.innerHTML = name
 
@@ -23,7 +28,13 @@ export function getCookie(cname: string) {
 }
 
 async function minigame() {
-    document.location.replace('/flappybird.html');
+    let gameNr = Math.floor(Math.random() * minigames.length);
+    document.location.href = minigames[gameNr]!;
+}
+async function hackdelft() {
+
+    document.location.href = "https://hackdelft.nl";
 }
 
 minigame_button!.addEventListener("click", () => minigame())
+hackdelft_button!.addEventListener("click", () => hackdelft())

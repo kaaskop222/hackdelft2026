@@ -1,20 +1,19 @@
 
 
-class flappybird {
+class aim {
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
+    private scoreText: HTMLDivElement;
 
 
-    private birdY:number;
-    private gravity:number;
-    private speed:number;
-
-
-    private interval;
+    private targetX:number;
+    private targetY:number;
+    private targetAmount: number;
 
     constructor() {
         let canvas = document.getElementById('canvas') as HTMLCanvasElement;
         let context = canvas.getContext("2d");
+        let scoreText = document.querySelector<HTMLDivElement>("#score-text")!
         if (context == null) throw new Error("context is null"); 
         context.lineCap = 'round';
         context.lineJoin = 'round';
@@ -23,18 +22,22 @@ class flappybird {
 
         this.canvas = canvas;
         this.context = context;
+        this.scoreText = scoreText;
+        this.targetX = 0;
+        this.targetY = 0;
 
-
-        this.birdY = 400;
-        this.gravity = -1;
-        this.speed = 5;
         
-        this.update();
+        this.targetAmount = 0;
+        
+        this.setNewTarget()
         this.redraw();
         this.createUserEvents();
-        this.interval = setInterval(() => this.update(), 50);
     }
 
+    private setNewTarget(){
+        this.targetX = Math.floor(Math.random() * this.canvas.width)
+        this.targetY = Math.floor(Math.random() * this.canvas.height)
+    }
 
     // check user input mousedown or touch
     private createUserEvents() {
@@ -52,10 +55,11 @@ class flappybird {
     //draw player
     private redraw() {
         let context = this.context;
+
         
         context.beginPath();
-        context.arc(100, this.birdY, 10, 0, 2 * Math.PI);
-        context.fillStyle = "orange";
+        context.arc(this.targetX, this.targetY, 20, 0, 2 * Math.PI);
+        context.fillStyle = "red";
         context.fill();
         context.stroke()
         context.closePath();
@@ -77,18 +81,32 @@ class flappybird {
     //update speed when pressed
 
     private pressEventHandler = (e: MouseEvent | TouchEvent) => {
-        
+    let mouseX = (e as TouchEvent).changedTouches ?
+                 (e as TouchEvent).changedTouches[0]!.pageX :
+                 (e as MouseEvent).pageX;
+    let mouseY = (e as TouchEvent).changedTouches ?
+                 (e as TouchEvent).changedTouches[0]!.pageY :
+                 (e as MouseEvent).pageY;
+    mouseX -= this.canvas.offsetLeft;
+    mouseY -= this.canvas.offsetTop;
 
-        this.speed = 10;
-        
-        
+    
+
+    let dist = Math.sqrt((mouseX - this.targetX)**2 + (mouseY-this.targetY)**2);
+    console.log(dist) 
+    if(dist <= 20){
+        this.setNewTarget();
+        this.targetAmount++;
+        this.scoreText.innerHTML = this.targetAmount.toString()
+        if(this.targetAmount>9) this.Win()
+    }
+        this.clearCanvas()
         this.redraw();
     }
     
     //stop when reaching the top
     public Win(){
         
-        clearInterval(this.interval)
         subtract(10000)
         
         document.location.href = '/main.html';
@@ -97,21 +115,10 @@ class flappybird {
     }
 
 
-    //game logic
-    private update(){
-        
-        if(this.speed > - 50) this.speed += this.gravity;
-        this.birdY -= this.speed;
-
-        if(this.birdY < 0) this.Win()
-        this.clearCanvas()
-        this.redraw();
-    }
-
     
 }
 
-new flappybird();
+new aim();
 
 let name = getCookie("username")
 
@@ -138,7 +145,7 @@ async function subtract(subtractNum:number) {
 
     let resp = await fetch("/subtract?" + new URLSearchParams({
         subtract_ms: String(num_subtract),
-        description: "won the flappy bird minigame :)",
+        description: "won the aim minigame :)",
         user: name
     }).toString())
 
