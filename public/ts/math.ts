@@ -39,6 +39,7 @@ class math{
     private checkNumber() {
         let number = number_input.valueAsNumber
         if(number == this.target){
+            number_input.onkeyup = null
             this.Win()
         }
     }

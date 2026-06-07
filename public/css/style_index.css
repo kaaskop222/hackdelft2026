@@ -3,6 +3,7 @@
     color: black;
     margin-top: 50px;
     font-size: 40px;
+    margin-bottom: 50px;
 }
 
 #event-layer {
@@ -41,8 +42,8 @@
 }
 
 #leaderboard-text{
-  position: relative;
-  top: -120px;
+  /* position: relative; */
+  top: -200px;
   z-index: 2;
   pointer-events: none;
     text-align: center;
@@ -52,8 +53,8 @@
 }
 
 #leaderboard-entries{
-  position: relative;
-  top: -120px;
+  /* position: relative; */
+  top: -200px;
   z-index: 2;
   pointer-events: none;
     text-align: center;
@@ -83,4 +84,27 @@
 #golden-cookie-img{
   position: absolute;
   z-index: 0;
+}
+
+#qrcode {
+    position:absolute;
+    bottom: 0%;
+    left: 0%;
+}
+
+#background {
+  z-index: 100;
+  position: absolute;
+  width: 100%;
+}
+
+body {
+  background-image: url("../img/beach.png");
+  background-size: cover;
+  background-position: center;
+}
+
+#canvas {
+  background-color: rgba(255, 255, 255, 255);
+  opacity: 0.5;
 }

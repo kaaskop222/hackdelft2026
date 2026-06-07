@@ -6,12 +6,12 @@ declare function confetti(options: any): void;
 // ELEMENTS
 // ----------------
 let timer_text = document.querySelector("#timer")!
-let subtract_input = document.querySelector<HTMLInputElement>("#subtract-input")!
-let subtract_button = document.querySelector<HTMLButtonElement>("#subtract-button")!
-let name_input = document.querySelector<HTMLInputElement>("#name-input")!
+// let subtract_input = document.querySelector<HTMLInputElement>("#subtract-input")!
+// let subtract_button = document.querySelector<HTMLButtonElement>("#subtract-button")!
+// let name_input = document.querySelector<HTMLInputElement>("#name-input")!
 let event_layer = document.querySelector<HTMLDivElement>("#event-layer")!
 let leaderboard = document.querySelector<HTMLDivElement>("#leaderboard-entries")!
-let double_button = document.querySelector<HTMLButtonElement>("#double-button")!
+// let double_button = document.querySelector<HTMLButtonElement>("#double-button")!
 let doubling_indicator = document.querySelector<HTMLDivElement>("#doubling-indicator")!
 let golden_cookie = document.querySelector<HTMLDivElement>("#golden-cookie")!
 
@@ -141,12 +141,12 @@ function spawn_golden_cookie() {
     let X = Math.floor(Math.random() * 80) + 10
     let Y = Math.floor(Math.random() * 80) + 10
     let delay = Math.floor(Math.random() * 90000) + 30000
-    console.log(`X: ${X}, Y: ${Y}, Delay: ${delay}`)
+    // console.log(`X: ${X}, Y: ${Y}, Delay: ${delay}`)
 
     golden_cookie_image.style.left = `${X}%`
     golden_cookie_image.style.top = `${Y}%`
     golden_cookie.appendChild(golden_cookie_image)
-    console.log(golden_cookie_image.style)
+    // console.log(golden_cookie_image.style)
 
     golden_cookie_timeout = setTimeout(() => spawn_golden_cookie(), delay)
     setTimeout(() => golden_cookie.innerHTML = "", 15000)
@@ -180,22 +180,22 @@ async function sync_timer() {
     }
 }
 
-async function subtract(amount?: number) {
-    let num_subtract = amount ?? subtract_input!.valueAsNumber
-    if (Number.isNaN(num_subtract)) return
-    let name = name_input!.value
+// async function subtract(amount?: number) {
+//     let num_subtract = amount ?? subtract_input!.valueAsNumber
+//     if (Number.isNaN(num_subtract)) return
+//     let name = name_input!.value
 
-    let resp = await fetch("/subtract?" + new URLSearchParams({
-        subtract_ms: String(num_subtract),
-        description: "Subtract Button",
-        user: name
-    }).toString())
+//     let resp = await fetch("/subtract?" + new URLSearchParams({
+//         subtract_ms: String(num_subtract),
+//         description: "Subtract Button",
+//         user: name
+//     }).toString())
 
-    if(!resp.ok) {
-        console.log(`Not ok response ${resp}`)
-        return
-    }
-}
+//     if(!resp.ok) {
+//         console.log(`Not ok response ${resp}`)
+//         return
+//     }
+// }
 
 
 async function get_events() {
@@ -255,7 +255,7 @@ let event_timeout = setTimeout(() => get_events(), 1)
 let leaderboard_timeout = setTimeout(() => get_leaderboard(), 1)
 let golden_cookie_timeout = setTimeout(() => spawn_golden_cookie(), 90000)
 
-subtract_button!.addEventListener("click", () => subtract())
+// subtract_button!.addEventListener("click", () => subtract())
 
-double_button.onclick = () => double()
+// double_button.onclick = () => double()
 fetch_multiplier()
