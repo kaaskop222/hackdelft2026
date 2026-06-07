@@ -88,7 +88,7 @@ class spaceInvader{
         }
         
         context.beginPath();
-        context.arc(this.playerX, 400, 10, 0, 2 * Math.PI);
+        context.arc(this.playerX, this.canvas.height - 100, 10, 0, 2 * Math.PI);
         context.fillStyle = "green";
         context.fill();
         context.stroke()
