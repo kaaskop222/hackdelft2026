@@ -27,7 +27,7 @@ export class Timer {
     subtract(number_milliseconds: number, short_description: string, 
         timestamp: number, user: string
     ) {
-        if (this.is_finished) return
+        if (this.is_finished || this.time_remaining_ms <= 0) return
         this.time_remaining_ms -= number_milliseconds
         this.events.push([short_description, number_milliseconds, timestamp, user])
         setTimeout(() => this.events.shift(), 2000)
