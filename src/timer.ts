@@ -33,6 +33,7 @@ export class Timer {
         setTimeout(() => this.events.shift(), 2000)
         this.check_finished()
 
+        if (user == "") return
         let previous = 0
         if(this.leaderboard.has(user)){
             previous = this.leaderboard.get(user)!
@@ -49,6 +50,7 @@ export class Timer {
     finished() {
         clearInterval(this.interval)
         this.time_remaining_ms = 0
+        this.is_finished = true
         // TODO: Do something when finished
     }
 

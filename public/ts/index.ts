@@ -54,7 +54,7 @@ function create_event_display(subtraction: number, description: string, user: st
         type = "negative"
         subtraction *= -1
     }
-    event.textContent = `${multiplier}${subtraction}:${user}:${description}`
+    event.textContent = `${multiplier}${subtraction.toLocaleString()}:${user}:${description}`
     event.classList.add("event-message")
     event.classList.add(type)
 
@@ -64,17 +64,9 @@ function create_event_display(subtraction: number, description: string, user: st
 
 function render_timer_local() {
     if (timer_finished) return
-
     const elapsed = Date.now() - synced_timer_received_at
     const remaining = Math.max(0, synced_timer_remaining - elapsed)
     timer_text!.textContent = msToTime(remaining)
-
-    if (remaining === 0) {
-        timer_finished = true
-        timer_text!.textContent = "Hello, World!"
-        clearInterval(timer_render_interval)
-        clearTimeout(event_timeout)
-    }
 }
 
 function render_leaderboard(entries: [string, number][]) {
@@ -83,7 +75,7 @@ function render_leaderboard(entries: [string, number][]) {
     for (const entry of entries) {
         const row = document.createElement("div");
         row.className = "leaderboard-row";
-        row.textContent = `${index}. ${entry[0]}: ${entry[1]}`;
+        row.textContent = `${index}. ${entry[0]}: ${entry[1].toLocaleString()}`;
 
         if (index == 1){
             row.style.color = "gold"
@@ -121,6 +113,8 @@ async function sync_timer() {
         timer_text!.textContent = "Hello, World!"
         clearInterval(timer_render_interval)
         clearTimeout(event_timeout)
+        clearTimeout(leaderboard_timeout)
+        get_leaderboard()
     }
 }
 
