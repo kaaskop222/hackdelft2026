@@ -86,14 +86,14 @@ class flappybird {
     }
     
     //stop when reaching the top
-    public Win(){
-        
+    public async Win(){
         clearInterval(this.interval)
-        subtract(10000)
-        
+        try {
+            await subtract(10000)
+        } catch (e) {
+            console.error('subtract failed', e)
+        }
         document.location.href = '/main.html';
-
-        
     }
 
 
@@ -135,12 +135,19 @@ async function subtract(subtractNum:number) {
     let num_subtract = subtractNum
     if (Number.isNaN(num_subtract)) return
     
-
-    let resp = await fetch("/subtract?" + new URLSearchParams({
+    const url = "/subtract?" + new URLSearchParams({
         subtract_ms: String(num_subtract),
         description: "won the flappy bird minigame :)",
         user: name
-    }).toString())
+    }).toString()
+
+    let resp: Response
+    try {
+        resp = await fetch(url, { method: 'GET', keepalive: true })
+    } catch (e) {
+        // Some browsers/environments may reject keepalive; fallback to normal fetch
+        resp = await fetch(url)
+    }
 
     if(!resp.ok) {
         console.log(`Not ok response ${resp}`)

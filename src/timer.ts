@@ -8,7 +8,7 @@ export class Timer {
     leaderboard: Map<string, number>
     multiplier: number
 
-    constructor(total_time = 1000000){
+    constructor(total_time = 100000000){
         this.time_remaining_ms = total_time
         this.last_timestamp = Date.now()
         this.events = []

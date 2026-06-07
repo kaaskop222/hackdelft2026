@@ -1,5 +1,7 @@
 console.log("Hi!")
 
+declare function confetti(options: any): void;
+
 // ----------------
 // ELEMENTS
 // ----------------
@@ -99,6 +101,28 @@ function render_leaderboard(entries: [string, number][]) {
     leaderboard.replaceChildren(fragment);
 }
 
+function spawn_confetti() {
+    setTimeout(() => render_confetti(), 1)
+    setTimeout(() => render_confetti(), 1000)
+    setTimeout(() => render_confetti(), 2000)
+    setTimeout(() => render_confetti(), 3500)
+    setTimeout(() => render_confetti(), 9000)
+}
+
+
+function render_confetti() {
+    function randomInRange(min:number, max:number) {
+        return Math.random() * (max - min) + min;
+    }
+    confetti({
+        angle: randomInRange(55, 125),
+        spread: randomInRange(50, 70),
+        particleCount: randomInRange(50, 100),
+        origin: { y: .6 }
+    });
+}
+
+
 // --------------------
 // SERVER FUNCTIONS
 // --------------------
@@ -120,6 +144,7 @@ async function sync_timer() {
         clearInterval(timer_render_interval)
         clearTimeout(event_timeout)
         clearTimeout(leaderboard_timeout)
+        spawn_confetti()
         get_leaderboard()
     }
 }
