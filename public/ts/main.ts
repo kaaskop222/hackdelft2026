@@ -7,7 +7,7 @@ let hackdelft_button = document.querySelector<HTMLButtonElement>("#hackdelft-but
 
 let minigames:string[];
 
-minigames = ['/flappybird.html', '/aim.html']
+minigames = ['/flappybird.html', '/aim.html', '/type.html']
 
 name_text.innerHTML = name
 
