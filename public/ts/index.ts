@@ -1,4 +1,4 @@
-console.log("Hi!")
+console.log("Hi!2")
 
 declare function confetti(options: any): void;
 
@@ -23,6 +23,7 @@ let golden_cookie = document.querySelector<HTMLDivElement>("#golden-cookie")!
 // ----------------
 
 let horn = new Audio('./sounds/horn.mp3');
+horn.volume = 0.35
 let ping = new Audio('./sounds/ping.mp3');
 let multiplier: number = 1
 let last_fetched_events: number = 0
