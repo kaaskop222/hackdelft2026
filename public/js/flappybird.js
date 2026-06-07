@@ -52,10 +52,11 @@ class flappybird {
     //stop when reaching the top
     Win() {
         clearInterval(this.interval);
+        subtract(10000);
+        document.location.replace('/main.html');
     }
     //game logic
     update() {
-        console.log(this.speed);
         if (this.speed > -50)
             this.speed += this.gravity;
         this.birdY -= this.speed;
@@ -66,5 +67,20 @@ class flappybird {
     }
 }
 new flappybird();
+async function subtract(subtractNum) {
+    let num_subtract = subtractNum;
+    if (Number.isNaN(num_subtract))
+        return;
+    let name = "minigame";
+    let resp = await fetch("/subtract" + new URLSearchParams({
+        subtract_ms: String(num_subtract),
+        description: "won the flappy bird minigame :)",
+        user: name
+    }).toString());
+    if (!resp.ok) {
+        console.log(`Not ok response ${resp}`);
+        return;
+    }
+}
 export {};
 //# sourceMappingURL=flappybird.js.map

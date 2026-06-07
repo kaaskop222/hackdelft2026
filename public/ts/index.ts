@@ -10,6 +10,8 @@ let name_input = document.querySelector<HTMLInputElement>("#name-input")!
 let event_layer = document.querySelector<HTMLDivElement>("#event-layer")!
 let leaderboard = document.querySelector<HTMLDivElement>("#leaderboard-entries")!
 
+let minigame_button = document.querySelector<HTMLButtonElement>("#minigame-button")!
+
 // ---------------
 // VARIABLES
 // ----------------
@@ -135,6 +137,10 @@ async function subtract() {
     }
 }
 
+async function minigame() {
+    document.location.replace('/flappybird.html');
+}
+
 async function get_events() {
     sync_timer()
     let resp = await fetch("/subtract_events?" + new URLSearchParams({
@@ -169,3 +175,4 @@ let event_timeout = setTimeout(() => get_events(), 1)
 let leaderboard_timeout = setTimeout(() => get_leaderboard(), 1)
 
 subtract_button!.addEventListener("click", () => subtract())
+minigame_button!.addEventListener("click", () => minigame())
