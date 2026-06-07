@@ -60,6 +60,11 @@ app.get('/leaderboard', (req, res) => {
     res.status(200).send(leaderboard)
 })
 
+app.get('/double', (req, res) => {
+    timer.double()
+    res.send("OK")
+})
+
 app.use(express.static('public'))
 
 // Global error handler (should be after routes)

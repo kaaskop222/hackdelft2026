@@ -41,6 +41,10 @@
 }
 
 #leaderboard-text{
+  position: relative;
+  top: -120px;
+  z-index: 2;
+  pointer-events: none;
     text-align: center;
     color: black;
     margin-top: 50px;
@@ -48,6 +52,21 @@
 }
 
 #leaderboard-entries{
+  position: relative;
+  top: -120px;
+  z-index: 2;
+  pointer-events: none;
     text-align: center;
     font-size: 30px
+}
+
+#doubling-indicator{
+  position: absolute;
+  z-index: 3;
+  pointer-events: none;
+  top: 10%;
+  left: 20%;
+  font-size: 100px;
+  color: red;
+  transform: rotate(-45deg)
 }

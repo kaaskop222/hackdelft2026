@@ -9,13 +9,15 @@ let subtract_button = document.querySelector<HTMLButtonElement>("#subtract-butto
 let name_input = document.querySelector<HTMLInputElement>("#name-input")!
 let event_layer = document.querySelector<HTMLDivElement>("#event-layer")!
 let leaderboard = document.querySelector<HTMLDivElement>("#leaderboard-entries")!
-
+let double_button = document.querySelector<HTMLButtonElement>("#double-button")!
 let minigame_button = document.querySelector<HTMLButtonElement>("#minigame-button")!
+let doubling_indicator = document.querySelector<HTMLDivElement>("#doubling-indicator")!
 
 // ---------------
 // VARIABLES
 // ----------------
 
+let multiplier: number = 1
 let last_fetched_events: number = 0
 let synced_timer_remaining: number = 0
 let synced_timer_received_at: number = Date.now()
@@ -67,7 +69,7 @@ function create_event_display(subtraction: number, description: string, user: st
 function render_timer_local() {
     if (timer_finished) return
     const elapsed = Date.now() - synced_timer_received_at
-    const remaining = Math.max(0, synced_timer_remaining - elapsed)
+    const remaining = Math.max(0, synced_timer_remaining - elapsed*multiplier)
     timer_text!.textContent = msToTime(remaining)
 }
 
@@ -166,6 +168,18 @@ async function get_leaderboard() {
     leaderboard_timeout = setTimeout(() => get_leaderboard(), 1000)
 }
 
+async function double() {
+    let resp = await fetch("/double")
+    if (!resp.ok) throw new Error(`Response status: ${resp.status}`)
+    multiplier *= 2
+    console.log(`doubled to ${multiplier}`)
+
+    if (multiplier > 1) {
+        doubling_indicator.innerText = `${multiplier}X`
+        doubling_indicator.style.fontSize = (90 + 20 * Math.log2(multiplier)) + "px"
+    }
+}
+
 // -------------------
 // MAIN
 // -------------------
@@ -176,3 +190,4 @@ let leaderboard_timeout = setTimeout(() => get_leaderboard(), 1)
 
 subtract_button!.addEventListener("click", () => subtract())
 minigame_button!.addEventListener("click", () => minigame())
+double_button.onclick = () => double()
