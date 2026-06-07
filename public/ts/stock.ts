@@ -15,7 +15,7 @@ class Graph{
         context.lineCap = 'round';
         context.lineJoin = 'round';
         context.strokeStyle = 'black';
-        context.lineWidth = 1;
+        context.lineWidth = 10;
         this.xpoints = []
         this.prices = []
 
