@@ -22,7 +22,8 @@ let golden_cookie = document.querySelector<HTMLDivElement>("#golden-cookie")!
 // VARIABLES
 // ----------------
 
-let horn = new Audio('./sounds/horn.mp3')
+let horn = new Audio('./sounds/horn.mp3');
+let ping = new Audio('./sounds/ping.mp3');
 let multiplier: number = 1
 let last_fetched_events: number = 0
 let synced_timer_remaining: number = 0
@@ -147,6 +148,7 @@ function spawn_golden_cookie() {
     golden_cookie_image.style.top = `${Y}%`
     golden_cookie.appendChild(golden_cookie_image)
     // console.log(golden_cookie_image.style)
+    ping.play()
 
     golden_cookie_timeout = setTimeout(() => spawn_golden_cookie(), delay)
     setTimeout(() => golden_cookie.innerHTML = "", 15000)
