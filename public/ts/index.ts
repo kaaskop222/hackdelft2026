@@ -12,6 +12,8 @@ let leaderboard = document.querySelector<HTMLDivElement>("#leaderboard-entries")
 let double_button = document.querySelector<HTMLButtonElement>("#double-button")!
 let doubling_indicator = document.querySelector<HTMLDivElement>("#doubling-indicator")!
 
+let horn = new Audio('./sounds/horn.mp3')
+
 // ---------------
 // VARIABLES
 // ----------------
@@ -114,6 +116,7 @@ async function sync_timer() {
 
     if (synced_timer_remaining == 0) {
         timer_text!.textContent = "Hello, World!"
+        horn.play();
         clearInterval(timer_render_interval)
         clearTimeout(event_timeout)
         clearTimeout(leaderboard_timeout)
