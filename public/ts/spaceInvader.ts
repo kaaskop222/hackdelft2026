@@ -149,7 +149,7 @@ class spaceInvader{
             for(let j=0; j<this.obstaclesY.length; j++){
                 this.obstaclesY[i]![j]! += this.obstacleSpeed;
 
-                let dist = Math.sqrt((this.obstaclesX[i]![j]! - this.playerX)**2 + (this.obstaclesY[i]![j]! - 400)**2);
+                let dist = Math.sqrt((this.obstaclesX[i]![j]! - this.playerX)**2 + (this.obstaclesY[i]![j]! - (this.canvas.height-100))**2);
                 if(dist <= 20){
                     this.Lose();
                 }
