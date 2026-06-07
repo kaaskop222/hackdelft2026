@@ -5,6 +5,8 @@ class Graph{
     private context: CanvasRenderingContext2D;
 
     private xpoints:number[]
+    private subtractNumberPos:number
+    private subtractNumberNeg:number
 
     constructor() {
         let canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -16,6 +18,11 @@ class Graph{
         context.lineWidth = 1;
         this.xpoints = []
         this.prices = []
+
+        this.subtractNumberPos = 10000;
+        this.subtractNumberNeg = 5000;
+
+
 
         this.canvas = canvas;
         this.context = context;
@@ -31,8 +38,8 @@ class Graph{
         if(this.xpoints.length>1){
             for(let i = 0; i<this.xpoints.length; i++){
                 context.beginPath();
-                context.moveTo(this.xpoints[i]!*50, 500 - (this.prices[i]!-60250))
-                context.lineTo(this.xpoints[i+1]!*50, 500 - (this.prices[i+1]!-60250))
+                context.moveTo(this.xpoints[i]!*50, 250 - (this.prices[i]!-this.prices[0]!))
+                context.lineTo(this.xpoints[i+1]!*50, 250 - (this.prices[i+1]!-this.prices[0]!))
                 if(this.prices[i+1]! < this.prices[i]!){
                     context.strokeStyle = "red"
                 }else{
@@ -54,17 +61,40 @@ class Graph{
         if(this.xpoints.length < 10) this.xpoints.push(this.xpoints.length)
         
         this.redraw()
+        if(this.prices[this.prices.length-1]!>this.prices[this.prices.length-2]!){
+            subtract(this.subtractNumberPos);
+        }else{
+            subtract(-this.subtractNumberNeg);
+        }
     }
 }
 
 let graph = new Graph()
 
-//fetch new price from server every 10s
+//Server functions 
 async function get_events() {
     let resp = await fetch("/stock")
     if (!resp.ok) throw new Error(`Response status: ${resp.status}`)
     let events = await resp.json()
     graph.setprice(events.regularMarketPrice)
+}
+
+//
+async function subtract(subtractNum:number) {
+    let num_subtract = subtractNum
+    if (Number.isNaN(num_subtract)) return
+    let name = "stocks"
+
+    let resp = await fetch("/subtract?" + new URLSearchParams({
+        subtract_ms: String(num_subtract),
+        description: "",
+        user: name
+    }).toString())
+
+    if(!resp.ok) {
+        console.log(`Not ok response ${resp}`)
+        return
+    }
 }
 
 

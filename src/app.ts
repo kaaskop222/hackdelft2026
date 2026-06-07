@@ -44,7 +44,6 @@ app.get("/stock", (req, res) => {
     }
 
     stockies()
-
     
 })
 
